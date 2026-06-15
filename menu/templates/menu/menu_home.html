@@ -1,26 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Cafe Menu</title>
-</head>
-<body>
-    <h1>Cafe Menu</h1>
+{% extends 'menu/base.html' %}
+
+{% block title %}Cafe Menu{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Our Menu</h1>
 
     {% for category in categories %}
-        <h2>{{ category.name }}</h2>
-        <ul>
+        <h2 class="mt-4">{{ category.name }}</h2>
+        <div class="row">
             {% for item in category.items.all %}
-                <li>
-                    {{ item.name }} - ${{ item.price }}
-                    {% if not item.is_available %}
-                        (Unavailable)
-                    {% endif %}
-                    <p>{{ item.description }}</p>
-                </li>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.name }}</h5>
+                            <p class="card-text">{{ item.description }}</p>
+                            <p class="card-text"><strong>${{ item.price }}</strong></p>
+                            {% if not item.is_available %}
+                                <span class="badge bg-secondary">Unavailable</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% endfor %}
-
-</body>
-</html>
+{% endblock %}
