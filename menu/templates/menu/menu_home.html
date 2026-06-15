@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cafe Menu</title>
+</head>
+<body>
+    <h1>Cafe Menu</h1>
+
+    {% for category in categories %}
+        <h2>{{ category.name }}</h2>
+        <ul>
+            {% for item in category.items.all %}
+                <li>
+                    {{ item.name }} - ${{ item.price }}
+                    {% if not item.is_available %}
+                        (Unavailable)
+                    {% endif %}
+                    <p>{{ item.description }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+
+</body>
+</html>
