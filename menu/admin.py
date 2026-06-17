@@ -55,3 +55,11 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
     list_display = ['menu_item', 'is_primary']
+    
+    def save(self, *args, **kwargs):
+        if self.is_primary:
+            ProductImage.objects.filter(
+                menu_item=self.menu_item,
+                is_primary=True
+            ).exclude(pk=self.pk).update(is_primary=False)
+        super().save(*args, **kwargs)
