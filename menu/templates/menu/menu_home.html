@@ -11,9 +11,13 @@
             {% for item in category.items.all %}
                 <div class="col-md-4 mb-4">
                     <div class="card h-100">
-                        {% if item.image %}
-                            <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}">
-                        {% endif %}
+                        {% with primary_image=item.images.filter(is_primary=True).first %}
+                            {% if primary_image %}
+                                <img src="{{ primary_image.image.url }}" class="card-img-top" alt="{{ item.name }}">
+                            {% elif item.images.first %}
+                                <img src="{{ item.images.first.image.url }}" class="card-img-top" alt="{{ item.name }}">
+                            {% endif %}
+                        {% endwith %}
                         <div class="card-body">
                             <h5 class="card-title">{{ item.name }}</h5>
                             <p class="card-text">{{ item.description }}</p>
