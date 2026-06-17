@@ -39,6 +39,10 @@
                     <a href="{% url 'menu_item_detail' item.pk %}"
                        class="btn btn-dark mt-2">
                         View Details
+                    <form method="post" action="{% url 'cart_add' item.pk %}" class="mt-2">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-dark w-100">Add to Cart</button>
+                    </form>
                     </a>
                 </div>
             </div>
