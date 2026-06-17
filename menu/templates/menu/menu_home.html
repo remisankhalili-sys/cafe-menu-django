@@ -25,6 +25,9 @@
                             {% if not item.is_available %}
                                 <span class="badge bg-secondary">Unavailable</span>
                             {% endif %}
+                            <a href="{% url 'menu_item_detail' item.pk %}" class="btn btn-dark mt-2">
+                                View Details
+                            </a>
                         </div>
                     </div>
                 </div>
