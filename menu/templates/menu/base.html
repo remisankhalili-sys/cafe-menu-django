@@ -10,6 +10,14 @@
     <nav class="navbar navbar-dark bg-dark mb-4">
         <div class="container">
             <a class="navbar-brand" href="/">Cafe Menu</a>
+            <a href="{% url 'cart_detail' %}" class="btn btn-outline-light btn-sm">
+                Cart
+                {% if request.session.cart %}
+                    <span class="badge bg-danger ms-1">
+                        {{ request.session.cart.values|length }}
+                    </span>
+                {% endif %}
+            </a>
         </div>
     </nav>
 
