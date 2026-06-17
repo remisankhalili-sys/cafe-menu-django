@@ -3,10 +3,22 @@ from .models import Category, MenuItem
 
 
 def menu_home(request):
-    categories = Category.objects.prefetch_related(
-        'items__images'
-    ).all()
-    return render(request, 'menu/menu_home.html', {'categories': categories})
+    categories = Category.objects.prefetch_related('items__images').all()
+    selected_category = request.GET.get('category')
+
+    if selected_category:
+        items = MenuItem.objects.prefetch_related('images').filter(
+            category__name__iexact=selected_category,
+            is_available=True
+        )
+    else:
+        items = MenuItem.objects.prefetch_related('images').filter(is_available=True)
+
+    return render(request, 'menu/menu_home.html', {
+        'categories': categories,
+        'items': items,
+        'selected_category': selected_category,
+    })
 
 
 def menu_item_detail(request, pk):

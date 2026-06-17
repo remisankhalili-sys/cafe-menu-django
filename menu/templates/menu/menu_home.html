@@ -3,35 +3,48 @@
 {% block title %}Cafe Menu{% endblock %}
 
 {% block content %}
-    <h1 class="mb-4">Our Menu</h1>
+<h1 class="mb-4">Our Menu</h1>
 
+<div class="mb-4 d-flex flex-wrap gap-2">
+    <a href="{% url 'menu_home' %}"
+       class="btn {% if not selected_category %}btn-dark{% else %}btn-outline-dark{% endif %}">
+        All
+    </a>
     {% for category in categories %}
-        <h2 class="mt-4">{{ category.name }}</h2>
-        <div class="row">
-            {% for item in category.items.all %}
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        {% with primary_image=item.images.filter(is_primary=True).first %}
-                            {% if primary_image %}
-                                <img src="{{ primary_image.image.url }}" class="card-img-top" alt="{{ item.name }}">
-                            {% elif item.images.first %}
-                                <img src="{{ item.images.first.image.url }}" class="card-img-top" alt="{{ item.name }}">
-                            {% endif %}
-                        {% endwith %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ item.name }}</h5>
-                            <p class="card-text">{{ item.description }}</p>
-                            <p class="card-text"><strong>${{ item.price }}</strong></p>
-                            {% if not item.is_available %}
-                                <span class="badge bg-secondary">Unavailable</span>
-                            {% endif %}
-                            <a href="{% url 'menu_item_detail' item.pk %}" class="btn btn-dark mt-2">
-                                View Details
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+        <a href="?category={{ category.name }}"
+           class="btn {% if selected_category == category.name %}btn-dark{% else %}btn-outline-dark{% endif %}">
+            {{ category.name }}
+        </a>
     {% endfor %}
+</div>
+
+<div class="row">
+    {% for item in items %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% with primary_image=item.images.filter(is_primary=True).first %}
+                    {% if primary_image %}
+                        <img src="{{ primary_image.image.url }}"
+                             class="card-img-top" alt="{{ item.name }}">
+                    {% elif item.images.first %}
+                        <img src="{{ item.images.first.image.url }}"
+                             class="card-img-top" alt="{{ item.name }}">
+                    {% endif %}
+                {% endwith %}
+                <div class="card-body">
+                    <span class="badge bg-secondary mb-2">{{ item.category.name }}</span>
+                    <h5 class="card-title">{{ item.name }}</h5>
+                    <p class="card-text">{{ item.description }}</p>
+                    <p class="card-text"><strong>${{ item.price }}</strong></p>
+                    <a href="{% url 'menu_item_detail' item.pk %}"
+                       class="btn btn-dark mt-2">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">No items found in this category.</p>
+    {% endfor %}
+</div>
 {% endblock %}
