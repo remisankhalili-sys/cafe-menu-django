@@ -22,28 +22,21 @@
     {% for item in items %}
         <div class="col-md-4 mb-4">
             <div class="card h-100">
-                {% with primary_image=item.images.filter(is_primary=True).first %}
-                    {% if primary_image %}
-                        <img src="{{ primary_image.image.url }}"
-                             class="card-img-top" alt="{{ item.name }}">
-                    {% elif item.images.first %}
-                        <img src="{{ item.images.first.image.url }}"
-                             class="card-img-top" alt="{{ item.name }}">
-                    {% endif %}
-                {% endwith %}
+                {% if item.primary_image %}
+                    <img src="{{ item.primary_image.image.url }}"
+                         class="card-img-top" alt="{{ item.name }}">
+                {% endif %}
                 <div class="card-body">
                     <span class="badge bg-secondary mb-2">{{ item.category.name }}</span>
                     <h5 class="card-title">{{ item.name }}</h5>
                     <p class="card-text">{{ item.description }}</p>
                     <p class="card-text"><strong>${{ item.price }}</strong></p>
                     <a href="{% url 'menu_item_detail' item.pk %}"
-                       class="btn btn-dark mt-2">
-                        View Details
+                       class="btn btn-dark mt-2">View Details</a>
                     <form method="post" action="{% url 'cart_add' item.pk %}" class="mt-2">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-outline-dark w-100">Add to Cart</button>
                     </form>
-                    </a>
                 </div>
             </div>
         </div>

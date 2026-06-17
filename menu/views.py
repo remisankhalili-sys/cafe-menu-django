@@ -16,6 +16,9 @@ def menu_home(request):
     else:
         items = MenuItem.objects.prefetch_related('images').filter(is_available=True)
 
+    for item in items:
+        item.primary_image = item.images.filter(is_primary=True).first() or item.images.first()
+
     return render(request, 'menu/menu_home.html', {
         'categories': categories,
         'items': items,
