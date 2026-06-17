@@ -1,5 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_POST
 from .models import Category, MenuItem
+from .cart import Cart
 
 
 def menu_home(request):
@@ -30,3 +32,32 @@ def menu_item_detail(request, pk):
         'primary_image': primary_image,
         'other_images': other_images,
     })
+
+
+def cart_detail(request):
+    cart = Cart(request)
+    return render(request, 'menu/cart.html', {'cart': cart})
+
+
+@require_POST
+def cart_add(request, pk):
+    cart = Cart(request)
+    item = get_object_or_404(MenuItem, pk=pk)
+    quantity = int(request.POST.get('quantity', 1))
+    cart.add(item_id=item.id, quantity=quantity)
+    return redirect('cart_detail')
+
+
+@require_POST
+def cart_remove(request, pk):
+    cart = Cart(request)
+    cart.remove(item_id=pk)
+    return redirect('cart_detail')
+
+
+@require_POST
+def cart_update(request, pk):
+    cart = Cart(request)
+    quantity = int(request.POST.get('quantity', 1))
+    cart.update(item_id=pk, quantity=quantity)
+    return redirect('cart_detail')
