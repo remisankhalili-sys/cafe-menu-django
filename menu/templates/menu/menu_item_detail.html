@@ -1,0 +1,46 @@
+{% extends 'menu/base.html' %}
+
+{% block title %}{{ item.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+
+    <div class="col-md-6">
+        {% if primary_image %}
+            <img src="{{ primary_image.image.url }}"
+                 class="img-fluid rounded mb-3"
+                 alt="{{ item.name }}">
+        {% endif %}
+
+        {% if other_images %}
+            <div class="row g-2">
+                {% for img in other_images %}
+                    <div class="col-4">
+                        <img src="{{ img.image.url }}"
+                             class="img-fluid rounded"
+                             alt="{{ item.name }}">
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-6">
+        <h1>{{ item.name }}</h1>
+        <p class="text-muted">{{ item.category.name }}</p>
+        <p>{{ item.description }}</p>
+        <h3>${{ item.price }}</h3>
+        {% if item.is_available %}
+            <span class="badge bg-success">Available</span>
+        {% else %}
+            <span class="badge bg-secondary">Unavailable</span>
+        {% endif %}
+        <div class="mt-4">
+            <a href="{% url 'menu_home' %}" class="btn btn-outline-dark">
+                Back to Menu
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
