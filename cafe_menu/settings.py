@@ -29,8 +29,10 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+AUTH_USER_MODEL = 'menu.User'
 
 INSTALLED_APPS = [
+    'menu',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
