@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from django.core.cache import cache
 from . import utils
-from .utils import phone_number, valid_phone, otp_key, OTP_TTL, check_rate_limit
+from .utils import phone_number, valid_phone, otp_key, OTP_TTL, check_rate_limit, send_sms, send_general_sms
 import random
 
 # Create your views here.
@@ -79,3 +79,26 @@ def verify_otp_view(request):
         'success': success,
         'phone': phone
     })
+def send_sms_view(request):
+    if request.method == "POST":
+        phone = request.POST.get('phone')
+        message = request.POST.get('message')
+        normal_phone = phone_number(phone)
+        if not valid_phone(normal_phone):
+            error = 'شماره معتبر نیست'
+            return render(request, 'send_sms.html', {'error': error})
+        if not message:
+            error = 'متن پیام نمی تواند خالی باشد'
+            return render(request, 'send_sms.html', {'error': error})
+        success_send = send_general_sms(normal_phone, message)
+        if success_send:
+            success_message = 'پیامک با موفقیت ارسال شد'
+            return render(request, 'send_sms.html', {'success_message': success_message})
+        else:
+            error = 'لطفا دوباره تلاش کنید'
+            return render(request, 'send_sms.html', {'error': error})
+            
+    else:
+        
+        return render(request, 'send_sms.html')
+    

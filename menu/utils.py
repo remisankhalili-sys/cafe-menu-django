@@ -2,7 +2,11 @@ import secrets
 import time
 import re
 from django.core.cache import cache
+from kavenegar import KavenegarAPI, APIException, HTTPException
+from django.conf import settings
+import logging
 
+logger = logging.getLogger(__name__)
 OTP_LENGTH = 6
 OTP_TTL = 120  
 MAX_ATTEMPTS = 3
@@ -51,9 +55,28 @@ def check_rate_limit(phone):
     try:
         attempts = int(result)
     except (ValueError, TypeError):
-        ache.set(rl_key, 1, timeout=RATE_LIMIT_WINDOW)
+        cache.set(rl_key, 1, timeout=RATE_LIMIT_WINDOW)
         return True
     if attempts >= MAX_ATTEMPTS:
         return False 
     cache.incr(rl_key, delta=1)
     return True
+
+def send_sms(phone_number, otp_code):
+    try:
+        api = KavenegarAPI(settings.KAVENEGAR_API_KEY)
+        message = f"کد تایید شما:{otp_code}"
+        params = {'sender':settings.KAVENEGAR_SENDER, 'receptor':phone_number, 'message':message}
+        response = api.sms_send(params)
+        logger.info(f"پیام با موفقیت به شماره{phone_number} ارسال شد")
+        return True
+    except APIException as error:
+        print("APIException:", error)
+        return False
+    except HTTPException as error:
+        logger.error(f"خطا سرور{error}")
+        print("HTTPException:", error)
+        return False
+def send_general_sms(phone_number, message):
+    pass
+    
