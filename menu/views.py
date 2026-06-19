@@ -32,9 +32,6 @@ def send_otp_view(request):
                 cache_key = otp_key(normalized_phone)
                 cache.set(cache_key, generated_otp, timeout=OTP_TTL)
                 
-                            # چاپ کد در ترمینال برای تست
-                print(f"OTP for {normalized_phone}: {generated_otp}")
-                
                 base_url = reverse('verify_otp')
                 return redirect(f"{base_url}?phone={normalized_phone}")
     return render(request, 'menu/send_otp.html', {'error': error})
