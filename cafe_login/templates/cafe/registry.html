@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عضویت</title>
+</head>
+<style>
+
+@font-face{
+ font-family: 'FontMan';
+ src: url('myfont/IRANYekan.ttf') format('truetype'),
+ url('myfont/IRANYekan.woff') format('woff'),
+ url('myfont/IRANYekan.woff2') format('woff2');
+}
+
+body{
+ font-family:FontMan;
+ text-align:center;
+}
+
+</style>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        <label>نام</label><br>
+        <input type="text" name="first_name" required></br>
+
+        <label>نام خانوادگی</label><br>
+        <input type="text" name="last_name" required></br>
+
+        <label>رمز عبور</label><br>
+        <input type="password" name="password" required></br>
+
+        <label>تکرار رمز عبور</label><br>
+        <input type="password" name="password_again" required></br>
+        
+        <label>شماره تماس</label><br>
+        <input type="tel" name="phone" required></br>
+        <button type="submit">ثبت نام</button>
+    </form>
+</body>
+</html>

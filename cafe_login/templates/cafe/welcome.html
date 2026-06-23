@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه خوش آمد گویی</title>
+</head>
+<style>
+
+@font-face{
+ font-family: 'FontMan';
+ src: url('myfont/IRANYekan.ttf') format('truetype'),
+ url('myfont/IRANYekan.woff') format('woff'),
+ url('myfont/IRANYekan.woff2') format('woff2');
+}
+
+body{
+ font-family:FontMan;
+ text-align:center;
+}
+
+</style>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        <label>سلام به صفحه ما خوش آمدید</label>
+        
+        
+    </form>
+</body>
+</html>
