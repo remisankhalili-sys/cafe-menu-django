@@ -3,7 +3,7 @@ from django.contrib.auth.base_user import BaseUserManager
 class UserManager(BaseUserManager):
     def create_user(self, phone, password=None):
         if not phone:
-            raise ValueError('شماره تلفن را وارد کنید')
+            raise ValueError('شماره تلفن نامعتبر است!')
         user = self.model(phone=phone)
         if password:
             user.set_password(password)
