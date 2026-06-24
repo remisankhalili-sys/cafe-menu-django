@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل کاربری</title>
+
+    <style>
+
+    </style>
+</head>
+<body>
+    <ul>
+        <li><h1>
+                سلام {{ user.first_name }} عزیز</h1>
+            </div>
+        </li>
+        <li>
+            <h3>
+                <a href="{% url 'edit_profile' %}">ویرایش پروفایل</a>
+            </h3>
+        </li>
+        <li>
+            <h3>
+                <a href="{% url 'logout' %}">خروج از حساب کاربری</a>
+            </h3>
+        </li>
+    </ul>
+</body>
+</html>

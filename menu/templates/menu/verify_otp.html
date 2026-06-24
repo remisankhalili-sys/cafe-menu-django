@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأیید کد یکبار مصرف</title>
+</head>
+<body>
+    <h1>تأیید کد یکبار مصرف</h1>
+    
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    
+    {% if success %}
+        <p style="color: green;">{{ success }}</p>
+    {% endif %}
+    
+    <form method="post">
+        {% csrf_token %}
+        <label for="phone">شماره تلفن:</label>
+        <input type="text" id="phone" name="phone" value="{{ phone }}" readonly>
+        <br><br>
+        <label for="otp">کد تأیید:</label>
+        <input type="text" id="otp" name="otp" placeholder="کد ۶ رقمی">
+        <button type="submit">تأیید</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه خوش آمد گویی</title>
+</head>
+<style>
+
+@font-face{
+ font-family: 'FontMan';
+ src: url('/fonts/vazir.ttf') format('truetype'),
+
+}
+
+body{
+ font-family:FontMan;
+ text-align:center;
+}
+
+</style>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        <label>سلام به صفحه ما خوش آمدید</label>
+        
+        
+    </form>
+</body>
+</html>

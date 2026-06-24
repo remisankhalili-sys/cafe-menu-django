@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ارسال رمز یکبار مصرف</title>
+    <style>
+        .mybutton {
+            background-color: #2196F3;
+            border: none;
+            border-radius: 7px;
+            color: white;
+            padding: 10px 25px;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .mybutton:hover {
+            background-color: #4287BF;
+        }
+    </style>
+</head>
+<body>
+    {% if error %}
+    <p style="color: red; font-weight: bold;">{{ error }}</p>
+    {% endif %}
+    <form method="POST" action="">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td><label for="phone">شماره تلفن</label></td>
+                <td><input type="tel" id="phone" name="phone"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <input type="submit" value="ورود" class="mybutton">
+                    
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

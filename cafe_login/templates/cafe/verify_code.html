@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کد تایید</title>
+</head>
+<style>
+
+@font-face{
+ font-family: 'FontMan';
+ src: url('/fonts/vazir.ttf') format('truetype'),
+ url('/fonts/vazir.woff') format('woff'),
+ url('/fonts/vazir.woff2') format('woff2');
+}
+
+body{
+ font-family:FontMan;
+ text-align:center;
+}
+
+</style>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        <label>کد تایید</label><br>
+        <input type="tel" name="code" required></br>
+        <button type="submit">تایید</button>
+    </form>
+</body>
+</html>

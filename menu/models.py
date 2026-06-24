@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from .managers import UserManager
 import os
 
 
@@ -22,3 +24,18 @@ class MenuItem(models.Model):
     def __str__(self):
         return self.name
 
+
+
+
+class ProductImage(models.Model):
+    menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to="menu_items/")
+    is_primary = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Image for {self.menu_item.name}"
+
+    def delete(self, *args, **kwargs):
+        if self.image and os.path.isfile(self.image.path):
+            os.remove(self.image.path)
+        super().delete(*args, **kwargs)

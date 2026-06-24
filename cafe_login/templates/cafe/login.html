@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود و عضویت</title>
+</head>
+<style>
+
+@font-face{
+ font-family: 'FontMan';
+ src: url('/fonts/vazir.ttf') format('truetype'),
+ url('/fonts/vazir.woff') format('woff'),
+ url('/fonts/vazir.woff2') format('woff2');
+}
+
+body{
+ font-family:FontMan;
+ text-align:center;
+}
+.myBorder1 {
+    border: 3px solid blue;
+    background-color: white;
+}
+.btn {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px;
+    border-radius: 25px;
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+    box-sizing: border-box; 
+}
+.button-container {
+    display: flex;           
+    flex-direction: column;  
+    align-items: center;     
+    gap: 12px;               
+    margin-top: 12px;        
+    width: 100%;            
+}
+.btn-secondary {
+    background-color: #28a745; 
+    color: white;
+}
+.btn-forgot {
+    background-color: transparent;
+    color: #666;
+    font-size: 13px;
+    text-decoration: underline;
+}
+.btn:hover {
+    transform: translateY(-2px); 
+    opacity: 0.9;
+}
+
+input[type="tel"], 
+input[type="password"] {
+    width: 100%;             
+    max-width: 300px;        
+    padding: 12px 15px;      
+    margin: 8px 0;           
+    border: 2px solid #ddd;  
+    border-radius: 25px;     
+    font-family: 'FontMan';  
+    outline: none;           
+    transition: 0.3s;        
+    box-sizing: border-box;  
+}
+
+
+input:focus {
+    border-color: #007bff;  
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2); 
+}
+
+
+label {
+    display: block;         
+    font-size: 14px;
+    color: #555;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+</style>
+<body>
+    <div class="login-box">
+    <form method="POST">
+        {% csrf_token %}
+        <label>شماره تماس</label><br>
+        <input class="myBorder1" type="tel" name="phone" required></br>
+
+
+        <label>رمز ورود</label><br>
+        <input class="myBorder1" type="password" name="password" ></br> 
+
+
+        <div class="button-container">
+        
+        <button  class="btn btn-secondary" type="submit" name="action" value="register">ثبت نام</button>
+        
+        <button  class="btn btn-primary" type="submit" name="action" value="password">ورود</button><br>
+       
+        <button  class="btn btn-forgot" type="submit" name="action" value="forgot">فراموشی رمز عبور</button>
+        </div>
+    </form>
+</body>
+</html>

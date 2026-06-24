@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حساب کاربری</title> 
+</head>
+<style>
+
+
+
+</style>
+<body>
+    <ul>
+        <li>
+            <h1>
+            <a href="{% url 'login_user' %}">پنل کاربری</a></h1>
+        </li>
+        <li>
+            <h2>
+            <a href="">سفارش های من </a></h2>
+        </li>
+        
+        <li>
+            <h2>
+            <a href="">لیست علاقه‌مندی‌ها</a></h2>
+        </li>
+                
+        <li>
+            <h2>
+            <a href="">خروج</a></h2>
+        </li>
+    </ul>
+    <div>
+    {% for order in orders %}
+
+ 
+    
+
+    {% endfor %}
+</body>
+</html>
