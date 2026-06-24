@@ -36,11 +36,9 @@ def login_phone(request):
             if user_exists:
                 request.session['phone'] = phone
                 messages.error(request,'این شماره قبلا ثبت نام کرده است')
-                return render(request, cafe/login.html)
-            if not user_exits:
-                
+                return render(request, 'cafe/login.html')
+            if not user_exists:
                 code = login_code()
-                return code
                 request.session['phone'] = phone
                 request.session['code'] = code
                 send_sms(phone, f"خوش آمدی به کافه ما❤️ کد فعالسازی شما:{code}")
@@ -83,12 +81,20 @@ def registry(request):
         user.first_name = first_name
         user.last_name = last_name
         if not(password == password_again):
+            messages.error(request, "رمز عبور و تکرار آن با هم مطابقت ندارند.")
             return redirect("registry")
-        user.set_password(password)
-        user.save()
         
-        login(request, user)
-        return redirect("welcome")
+        try:
+            user = User.objects.get(phone=phone)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.set_password(password)
+            user.save()
+            login(request, user)
+            return redirect("request_phone")
+        except User.DoesNotExist:
+            messages.error(request, "کاربری با این شماره یافت نشد.")
+            return redirect("request_phone")
     return render(request, 'cafe/registry.html')
 def welcome(request):
     return render(request, 'cafe/welcome.html')
