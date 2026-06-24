@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
 
 class Customer(AbstractUser):
@@ -19,6 +19,17 @@ class Customer(AbstractUser):
         upload_to='profile_pictures/',
         blank=True,
         null=True
+    )
+
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='customer_set',
+        blank=True
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='customer_set',
+        blank=True
     )
 
     def __str__(self):
