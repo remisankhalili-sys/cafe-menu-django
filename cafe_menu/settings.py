@@ -29,16 +29,20 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-AUTH_USER_MODEL = 'menu.User'
+AUTH_USER_MODEL = 'cafe_login.User'
 
 INSTALLED_APPS = [
-    'menu',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'menu.apps.MenuConfig',
+    'cafe_login',
+    'Favoriteslist',
+    'profiles',
+
 ]
 
 MIDDLEWARE = [
@@ -124,3 +128,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 KAVENEGAR_API_KEY = '7A626F426A6370695146776B6E3071315151366967696E34786F725A387958742F447A455364564D386A413D'
 KAVENEGAR_SENDER = '988018949161'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

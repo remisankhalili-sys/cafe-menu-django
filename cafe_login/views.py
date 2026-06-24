@@ -10,6 +10,8 @@ from django.contrib.auth import logout
 
 def login_code():
     return str(random.randint(100000, 999999))
+
+    
 def normal_phone(phone):
     digits = re.sub(r'\D', '', phone)
     if digits.startswith('0'):

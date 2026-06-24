@@ -29,18 +29,18 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-AUTH_USER_MODEL = 'cafe_login.User'
 KAVENEGAR_API_KEY = ''
 INSTALLED_APPS = [
-    'cafe_login',
-    'Favoriteslist',
-    'profiles',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'menu',
+    'cafe_login',
+    'Favoriteslist',
+    'profiles',
 ]
 
 MIDDLEWARE = [
@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'cafe.urls'
+# ROOT_URLCONF = 'cafe.urls'
 
 TEMPLATES = [
     {
@@ -124,3 +124,5 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+
+AUTH_USER_MODEL = 'cafe_login.User'
