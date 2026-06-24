@@ -53,7 +53,7 @@ def login_phone(request):
                 code = login_code()
                 request.session['phone'] = phone
                 request.session['code'] = code
-                request.session['auth_mode'] = 'forgot'
+                request.session['auth_mode'] = 'forget'
                 send_sms(phone, f"کد بازیابی رمز شما: {code}")
                 print(code)
                 return redirect("verify_code")
@@ -65,8 +65,12 @@ def verify_code(request):
         enter_code = request.POST.get('code', '')
         phone = request.session.get('phone')
         code_get = request.session.get('code')
-        if enter_code == code_get:  
-            user, created = User.objects.get_or_create(phone=phone)
+        forget_mode = request.session.get('auth_mode')
+        if enter_code == code_get: 
+            if forget_mode == 'forget':
+                return redirect("rest_password")
+            else:
+                user, created = User.objects.get_or_create(phone=phone)
             if created:
                 return redirect("registry")
             login(request, user)
@@ -107,6 +111,28 @@ def registry(request):
             messages.error(request, "کاربری با این شماره یافت نشد.")
             return redirect("request_phone")
     return render(request, 'cafe/registry.html')
+def reset_password(request):
+    phone = request.session.get('phone')
+    if not phone:
+        return redirect('request_phone')
+    if request.method == 'POST':
+        password = request.POST['password']
+        password_again = request.POST['password_again']
+        if password != password_again:
+            message.error(request, "رمز با نکرار آن یکی نیست")
+        try:
+            user = User.objects.get(phone=phone)
+            user.set_password(password)
+            user.save()
+            login(request, user)
+            message.succes(request, 'رمز عبور با موفقیت تغییر کرد')
+            return redirect('request_phone')
+        except User.DoesNotExist:
+            message.error(request, 'کاربری با این شماره پیدا نشد!')
+            return redirect('request_phone')
+    return render(request, 'cafe/reset_password.html')
+    
+    
 def welcome(request):
     return render(request, 'cafe/welcome.html')
 def logout_view(request):
