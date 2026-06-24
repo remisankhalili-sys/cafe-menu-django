@@ -47,7 +47,18 @@ def login_phone(request):
  
         elif action == 'password':
             return redirect("welcome")
-
+        elif action =='forget':
+            try:
+                user = User.objects.get(phone=phone)
+                code = login_code()
+                request.session['phone'] = phone
+                request.session['code'] = code
+                request.session['auth_mode'] = 'forgot'
+                send_sms(phone, f"کد بازیابی رمز شما: {code}")
+                print(code)
+                return redirect("verify_code")
+            except User.DoesNotExist:
+                messages.error(request, "شماره وارد شده ثبت‌نام نشده است.")
     return render(request, 'cafe/login.html')
 def verify_code(request):
     if request.method == 'POST':
