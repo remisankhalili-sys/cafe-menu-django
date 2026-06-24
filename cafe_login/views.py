@@ -5,6 +5,9 @@ from .models import User
 from .utils import send_sms
 from django.contrib.auth import login
 from django.contrib import messages
+from django.contrib.auth import logout
+
+
 def login_code():
     return str(random.randint(100000, 999999))
 def normal_phone(phone):
@@ -89,5 +92,7 @@ def registry(request):
     return render(request, 'cafe/registry.html')
 def welcome(request):
     return render(request, 'cafe/welcome.html')
-        
+def logout_view(request):
+    messages.success(request, "با موفقیت از حساب کاربری خارج شدید.")
+    return redirect('request_phone')    
 
