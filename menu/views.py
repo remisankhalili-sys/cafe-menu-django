@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
-from .models import Category, MenuItem, Wishlist
+from django.contrib import messages
+from .models import Category, MenuItem, Wishlist, Order, OrderItem
 from .cart import Cart
 
 
 def menu_home(request):
+    """Display all menu items with optional category filtering."""
     categories = Category.objects.prefetch_related('items__images').all()
     selected_category = request.GET.get('category')
     if selected_category:
@@ -32,7 +34,9 @@ def menu_home(request):
         'wishlist_ids': wishlist_ids,
     })
 
+
 def menu_item_detail(request, pk):
+    """Display details for a single menu item."""
     item = get_object_or_404(MenuItem.objects.prefetch_related('images'), pk=pk)
     primary_image = item.images.filter(is_primary=True).first()
     other_images = item.images.filter(is_primary=False)
@@ -44,12 +48,14 @@ def menu_item_detail(request, pk):
 
 
 def cart_detail(request):
+    """Display the current cart."""
     cart = Cart(request)
     return render(request, 'menu/cart.html', {'cart': cart})
 
 
 @require_POST
 def cart_add(request, pk):
+    """Add a menu item to the cart."""
     cart = Cart(request)
     item = get_object_or_404(MenuItem, pk=pk)
     quantity = int(request.POST.get('quantity', 1))
@@ -59,6 +65,7 @@ def cart_add(request, pk):
 
 @require_POST
 def cart_remove(request, pk):
+    """Remove a menu item from the cart."""
     cart = Cart(request)
     cart.remove(item_id=pk)
     return redirect('menu:cart_detail')
@@ -66,10 +73,12 @@ def cart_remove(request, pk):
 
 @require_POST
 def cart_update(request, pk):
+    """Update the quantity of a menu item in the cart."""
     cart = Cart(request)
     quantity = int(request.POST.get('quantity', 1))
     cart.update(item_id=pk, quantity=quantity)
     return redirect('menu:cart_detail')
+
 
 @login_required
 def wishlist(request):
@@ -89,3 +98,27 @@ def wishlist_toggle(request, pk):
     if not created:
         wishlist_item.delete()
     return redirect(request.META.get('HTTP_REFERER', 'menu:menu_home'))
+
+
+@login_required
+def checkout(request):
+    """Convert cart items into an Order and clear the cart."""
+    cart = Cart(request)
+    items = cart.get_items()
+
+    if not items:
+        messages.warning(request, 'Your cart is empty.')
+        return redirect('menu:cart_detail')
+
+    order = Order.objects.create(customer=request.user)
+    for entry in items:
+        OrderItem.objects.create(
+            order=order,
+            menu_item=entry['item'],
+            quantity=entry['quantity'],
+            price=entry['item'].price
+        )
+    cart.clear()
+    messages.success(request, f'Order #{order.pk} placed successfully!')
+    return redirect('menu:menu_home')
+
