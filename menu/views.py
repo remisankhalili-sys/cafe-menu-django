@@ -8,7 +8,6 @@ from .cart import Cart
 def menu_home(request):
     categories = Category.objects.prefetch_related('items__images').all()
     selected_category = request.GET.get('category')
-
     if selected_category:
         items = MenuItem.objects.prefetch_related('images').filter(
             category__name__iexact=selected_category,
@@ -20,12 +19,18 @@ def menu_home(request):
     for item in items:
         item.primary_image = item.images.filter(is_primary=True).first() or item.images.first()
 
+    wishlist_ids = []
+    if request.user.is_authenticated:
+        wishlist_ids = list(
+            Wishlist.objects.filter(customer=request.user).values_list('menu_item_id', flat=True)
+        )
+
     return render(request, 'menu/menu_home.html', {
         'categories': categories,
         'items': items,
         'selected_category': selected_category,
+        'wishlist_ids': wishlist_ids,
     })
-
 
 def menu_item_detail(request, pk):
     item = get_object_or_404(MenuItem.objects.prefetch_related('images'), pk=pk)
