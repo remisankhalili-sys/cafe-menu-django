@@ -6,7 +6,7 @@
 <h1 class="mb-4">Our Menu</h1>
 
 <div class="mb-4 d-flex flex-wrap gap-2">
-    <a href="{% url 'menu_home' %}"
+    <a href="{% url 'menu:menu_home' %}"
        class="btn {% if not selected_category %}btn-dark{% else %}btn-outline-dark{% endif %}">
         All
     </a>
@@ -31,9 +31,9 @@
                     <h5 class="card-title">{{ item.name }}</h5>
                     <p class="card-text">{{ item.description }}</p>
                     <p class="card-text"><strong>${{ item.price }}</strong></p>
-                    <a href="{% url 'menu_item_detail' item.pk %}"
+                    <a href="{% url 'menu:menu_item_detail' item.pk %}"
                        class="btn btn-dark mt-2">View Details</a>
-                    <form method="post" action="{% url 'cart_add' item.pk %}" class="mt-2">
+                    <form method="post" action="{% url 'menu:cart_add' item.pk %}"
                         {% csrf_token %}
                         <button type="submit" class="btn btn-outline-dark w-100">Add to Cart</button>
                     </form>

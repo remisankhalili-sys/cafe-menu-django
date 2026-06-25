@@ -12,8 +12,11 @@ def register(request):
 
     if request.method == 'POST':
         form = CustomerRegistrationForm(request.POST)
+        print("IS VALID:", form.is_valid())
+        print("ERRORS:", form.errors)
         if form.is_valid():
             user = form.save()
+            print("USER SAVED:", user)
             login(request, user)
             messages.success(request, 'Welcome! Your account has been created successfully.')
             return redirect('menu:menu_home')
@@ -34,7 +37,7 @@ def login_view(request):
             user = form.get_user()
             login(request, user)
             messages.success(request, 'You have logged in successfully.')
-            return redirect(request.GET.get('next', 'menu:menu_home'))
+            return redirect('menu:menu_home')
     else:
         form = CustomerLoginForm(request)
 

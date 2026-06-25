@@ -48,14 +48,14 @@ def cart_add(request, pk):
     item = get_object_or_404(MenuItem, pk=pk)
     quantity = int(request.POST.get('quantity', 1))
     cart.add(item_id=item.id, quantity=quantity)
-    return redirect('cart_detail')
+    return redirect('menu:cart_detail')
 
 
 @require_POST
 def cart_remove(request, pk):
     cart = Cart(request)
     cart.remove(item_id=pk)
-    return redirect('cart_detail')
+    return redirect('menu:cart_detail')
 
 
 @require_POST
@@ -63,4 +63,4 @@ def cart_update(request, pk):
     cart = Cart(request)
     quantity = int(request.POST.get('quantity', 1))
     cart.update(item_id=pk, quantity=quantity)
-    return redirect('cart_detail')
+    return redirect('menu:cart_detail')

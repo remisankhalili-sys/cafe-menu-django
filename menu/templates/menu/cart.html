@@ -24,7 +24,7 @@
                             <td>{{ entry.item.name }}</td>
                             <td>${{ entry.item.price }}</td>
                             <td>
-                                <form method="post" action="{% url 'cart_update' entry.item.pk %}" class="d-flex align-items-center gap-2">
+                                <form method="post" action="{% url 'menu:cart_update' entry.item.pk %}" class="d-flex align-items-center gap-2">
                                     {% csrf_token %}
                                     <input type="number" name="quantity"
                                            value="{{ entry.quantity }}"
@@ -36,7 +36,7 @@
                             </td>
                             <td><strong>${{ entry.total_price }}</strong></td>
                             <td>
-                                <form method="post" action="{% url 'cart_remove' entry.item.pk %}">
+                                <form method="post" action="{% url 'menu:cart_remove' entry.item.pk %}">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
                                 </form>
@@ -54,7 +54,7 @@
         </div>
 
         <div class="d-flex gap-2 mt-3">
-            <a href="{% url 'menu_home' %}" class="btn btn-outline-dark">Continue Shopping</a>
+            <a href="{% url 'menu:menu_home' %}" class="btn btn-outline-dark">Continue Shopping</a>
             <a href="#" class="btn btn-dark">Checkout</a>
         </div>
 
