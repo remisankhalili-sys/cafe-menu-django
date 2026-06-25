@@ -34,5 +34,19 @@
                         <button type="submit" class="btn btn-outline-dark w-100">Add to Cart</button>
                     </form>
                     {% if request.user.is_authenticated %}
-                        <a href="{% url 'menu:wishlist_toggle' item.pk %}"
-                           class="btn w-100
+                        {% if item.pk in wishlist_ids %}
+                            <a href="{% url 'menu:wishlist_toggle' item.pk %}"
+                               class="btn btn-warning w-100 mt-2">❤ Saved</a>
+                        {% else %}
+                            <a href="{% url 'menu:wishlist_toggle' item.pk %}"
+                               class="btn btn-outline-secondary w-100 mt-2">♡ Save</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">No items found in this category.</p>
+    {% endfor %}
+</div>
+{% endblock %}
