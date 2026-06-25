@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
-from .models import Category, MenuItem
+from django.contrib.auth.decorators import login_required
+from .models import Category, MenuItem, Wishlist
 from .cart import Cart
 
 
@@ -64,3 +65,22 @@ def cart_update(request, pk):
     quantity = int(request.POST.get('quantity', 1))
     cart.update(item_id=pk, quantity=quantity)
     return redirect('menu:cart_detail')
+
+@login_required
+def wishlist(request):
+    """Display the customer's wishlist."""
+    items = Wishlist.objects.filter(customer=request.user).select_related('menu_item')
+    return render(request, 'menu/wishlist.html', {'items': items})
+
+
+@login_required
+def wishlist_toggle(request, pk):
+    """Add or remove a menu item from the customer's wishlist."""
+    item = get_object_or_404(MenuItem, pk=pk)
+    wishlist_item, created = Wishlist.objects.get_or_create(
+        customer=request.user,
+        menu_item=item
+    )
+    if not created:
+        wishlist_item.delete()
+    return redirect(request.META.get('HTTP_REFERER', 'menu:menu_home'))
