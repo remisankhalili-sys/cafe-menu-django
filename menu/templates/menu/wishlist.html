@@ -1,0 +1,30 @@
+{% extends 'menu/base.html' %}
+{% block title %}My Wishlist{% endblock %}
+{% block content %}
+<h1 class="mb-4">My Wishlist</h1>
+{% if items %}
+    <div class="row">
+        {% for entry in items %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% with entry.menu_item.images.all|first as img %}
+                        {% if img %}
+                            <img src="{{ img.image.url }}" class="card-img-top" alt="{{ entry.menu_item.name }}">
+                        {% endif %}
+                    {% endwith %}
+                    <div class="card-body">
+                        <span class="badge bg-secondary mb-2">{{ entry.menu_item.category.name }}</span>
+                        <h5 class="card-title">{{ entry.menu_item.name }}</h5>
+                        <p class="card-text"><strong>${{ entry.menu_item.price }}</strong></p>
+                        <a href="{% url 'menu:menu_item_detail' entry.menu_item.pk %}" class="btn btn-dark btn-sm">View</a>
+                        <a href="{% url 'menu:wishlist_toggle' entry.menu_item.pk %}" class="btn btn-outline-danger btn-sm">Remove</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="text-muted">Your wishlist is empty.</p>
+    <a href="{% url 'menu:menu_home' %}" class="btn btn-dark">Browse Menu</a>
+{% endif %}
+{% endblock %}
