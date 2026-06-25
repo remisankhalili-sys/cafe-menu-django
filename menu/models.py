@@ -1,5 +1,6 @@
 import os
 from django.db import models
+from django.conf import settings
 
 
 class Category(models.Model):
@@ -73,3 +74,26 @@ class ProductImage(models.Model):
         if self.image and os.path.isfile(self.image.path):
             os.remove(self.image.path)
         super().delete(*args, **kwargs)
+
+class Wishlist(models.Model):
+    """
+    Represents a customer's saved/favourite menu items.
+    Each customer can have multiple wishlist items.
+    """
+    customer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='wishlist'
+    )
+    menu_item = models.ForeignKey(
+        MenuItem,
+        on_delete=models.CASCADE,
+        related_name='wishlisted_by'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('customer', 'menu_item')
+
+    def __str__(self):
+        return f"{self.customer.username} - {self.menu_item.name}"        

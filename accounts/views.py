@@ -12,11 +12,8 @@ def register(request):
 
     if request.method == 'POST':
         form = CustomerRegistrationForm(request.POST)
-        print("IS VALID:", form.is_valid())
-        print("ERRORS:", form.errors)
         if form.is_valid():
             user = form.save()
-            print("USER SAVED:", user)
             login(request, user)
             messages.success(request, 'Welcome! Your account has been created successfully.')
             return redirect('menu:menu_home')
