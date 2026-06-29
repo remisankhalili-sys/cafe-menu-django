@@ -21,6 +21,40 @@ class ManagerPermissionMixin:
         return request.user.groups.filter(name='Manager').exists() or request.user.is_superuser
 
 
+class StaffPermissionMixin:
+    """Mixin to allow Staff group access to menu-related models without delete."""
+
+    def has_module_perms(self, request):
+        return (
+            request.user.groups.filter(name__in=['Manager', 'Staff']).exists()
+            or request.user.is_superuser
+        )
+
+    def has_view_permission(self, request, obj=None):
+        return (
+            request.user.groups.filter(name__in=['Manager', 'Staff']).exists()
+            or request.user.is_superuser
+        )
+
+    def has_add_permission(self, request):
+        return (
+            request.user.groups.filter(name__in=['Manager', 'Staff']).exists()
+            or request.user.is_superuser
+        )
+
+    def has_change_permission(self, request, obj=None):
+        return (
+            request.user.groups.filter(name__in=['Manager', 'Staff']).exists()
+            or request.user.is_superuser
+        )
+
+    def has_delete_permission(self, request, obj=None):
+        return (
+            request.user.groups.filter(name='Manager').exists()
+            or request.user.is_superuser
+        )
+
+
 class ProductImageInline(admin.TabularInline):
     """Inline admin for product images within MenuItem."""
     model = ProductImage
@@ -37,7 +71,7 @@ class OrderItemInline(admin.TabularInline):
 
 
 @admin.register(MenuItem)
-class MenuItemAdmin(ManagerPermissionMixin, admin.ModelAdmin):
+class MenuItemAdmin(StaffPermissionMixin, admin.ModelAdmin):
     """Admin panel for menu items with image inline."""
     inlines = [ProductImageInline]
     list_display = ['name', 'category', 'price', 'is_available']
@@ -46,13 +80,13 @@ class MenuItemAdmin(ManagerPermissionMixin, admin.ModelAdmin):
 
 
 @admin.register(Category)
-class CategoryAdmin(ManagerPermissionMixin, admin.ModelAdmin):
+class CategoryAdmin(StaffPermissionMixin, admin.ModelAdmin):
     """Admin panel for menu categories."""
     list_display = ['name']
 
 
 @admin.register(ProductImage)
-class ProductImageAdmin(ManagerPermissionMixin, admin.ModelAdmin):
+class ProductImageAdmin(StaffPermissionMixin, admin.ModelAdmin):
     """Admin panel for product images."""
     list_display = ['menu_item', 'is_primary']
 
