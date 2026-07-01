@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, MenuItem, ProductImage, Order, OrderItem
+from .models import Category, MenuItem, ProductImage, Order, OrderItem, Comment, Ingredient
 
 
 class ManagerPermissionMixin:
@@ -62,6 +62,13 @@ class ProductImageInline(admin.TabularInline):
     fields = ['image', 'is_primary']
 
 
+class IngredientInline(admin.TabularInline):
+    """Inline admin for ingredients within MenuItem."""
+    model = Ingredient
+    extra = 3
+    fields = ['name', 'value']
+
+
 class OrderItemInline(admin.TabularInline):
     """Inline admin for order items within Order."""
     model = OrderItem
@@ -72,8 +79,8 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(MenuItem)
 class MenuItemAdmin(StaffPermissionMixin, admin.ModelAdmin):
-    """Admin panel for menu items with image inline."""
-    inlines = [ProductImageInline]
+    """Admin panel for menu items with image and ingredient inlines."""
+    inlines = [ProductImageInline, IngredientInline]
     list_display = ['name', 'category', 'price', 'is_available']
     list_filter = ['category', 'is_available']
     search_fields = ['name', 'description']
@@ -93,10 +100,7 @@ class ProductImageAdmin(StaffPermissionMixin, admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(ManagerPermissionMixin, admin.ModelAdmin):
-    """
-    Admin panel for orders with filtering by date and category.
-    Managers can filter orders by date range and product category.
-    """
+    """Admin panel for orders with filtering by date and category."""
     inlines = [OrderItemInline]
     list_display = ['id', 'customer', 'status', 'created_at', 'get_total']
     list_filter = ['status', 'created_at', 'items__menu_item__category']
@@ -108,3 +112,12 @@ class OrderAdmin(ManagerPermissionMixin, admin.ModelAdmin):
         """Display total price of the order."""
         return f"${obj.get_total()}"
     get_total.short_description = 'Total'
+
+
+@admin.register(Comment)
+class CommentAdmin(ManagerPermissionMixin, admin.ModelAdmin):
+    """Admin panel for customer comments."""
+    list_display = ['customer', 'menu_item', 'created_at']
+    list_filter = ['menu_item', 'created_at']
+    search_fields = ['customer__username', 'text']
+    readonly_fields = ['customer', 'menu_item', 'created_at']
