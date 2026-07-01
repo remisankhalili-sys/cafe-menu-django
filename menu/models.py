@@ -186,3 +186,14 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return f"{self.name}: {self.value} ({self.menu_item.name})"
+    
+class Notification(models.Model):
+    """
+    Represents an admin notification triggered by a new order.
+    """
+    message = models.CharField(max_length=255)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.message
