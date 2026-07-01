@@ -1,24 +1,18 @@
 {% extends 'menu/base.html' %}
-
 {% block title %}{{ item.name }}{% endblock %}
-
 {% block content %}
 <div class="row">
-
     <div class="col-md-6">
         {% if primary_image %}
             <img src="{{ primary_image.image.url }}"
-                 class="img-fluid rounded mb-3"
-                 alt="{{ item.name }}">
+                 class="img-fluid rounded mb-3" alt="{{ item.name }}">
         {% endif %}
-
         {% if other_images %}
             <div class="row g-2">
                 {% for img in other_images %}
                     <div class="col-4">
                         <img src="{{ img.image.url }}"
-                             class="img-fluid rounded"
-                             alt="{{ item.name }}">
+                             class="img-fluid rounded" alt="{{ item.name }}">
                     </div>
                 {% endfor %}
             </div>
@@ -30,7 +24,6 @@
         <p class="text-muted">{{ item.category.name }}</p>
         <p>{{ item.description }}</p>
         <h3>${{ item.price }}</h3>
-
         {% if item.is_available %}
             <span class="badge bg-success">Available</span>
         {% else %}
@@ -44,12 +37,66 @@
             <button type="submit" class="btn btn-dark">Add to Cart</button>
         </form>
 
-        <div class="mt-4">
-            <a href="{% url 'menu:menu_home' %}" class="btn btn-outline-dark">
-                Back to Menu
-            </a>
+        <div class="mt-3">
+            <a href="{% url 'menu:menu_home' %}" class="btn btn-outline-dark">Back to Menu</a>
         </div>
     </div>
+</div>
 
+{% if ingredients %}
+    <div class="mt-5">
+        <h4>Ingredients & Details</h4>
+        <table class="table table-bordered w-50">
+            <thead class="table-dark">
+                <tr>
+                    <th>Property</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ingredient in ingredients %}
+                    <tr>
+                        <td>{{ ingredient.name }}</td>
+                        <td>{{ ingredient.value }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+
+<div class="mt-5">
+    <h4>Comments</h4>
+
+    {% if request.user.is_authenticated %}
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            <div class="mb-2">
+                <textarea name="text" class="form-control" rows="3"
+                          placeholder="Write your comment...">{% if user_comment %}{{ user_comment.text }}{% endif %}</textarea>
+            </div>
+            <button type="submit" class="btn btn-dark btn-sm">
+                {% if user_comment %}Update Comment{% else %}Submit Comment{% endif %}
+            </button>
+        </form>
+    {% else %}
+        <p class="text-muted">Please <a href="{% url 'accounts:login' %}">login</a> to leave a comment.</p>
+    {% endif %}
+
+    {% if comments %}
+        {% for comment in comments %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        {{ comment.customer.username }} —
+                        {{ comment.created_at|date:"Y/m/d" }}
+                    </h6>
+                    <p class="card-text">{{ comment.text }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">No comments yet.</p>
+    {% endif %}
 </div>
 {% endblock %}
