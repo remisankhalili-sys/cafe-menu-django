@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Category, MenuItem, Wishlist, Order, OrderItem
+from .models import Category, MenuItem, Wishlist, Order, OrderItem, Comment, Ingredient
 from .cart import Cart
 
 
@@ -36,14 +36,35 @@ def menu_home(request):
 
 
 def menu_item_detail(request, pk):
-    """Display details for a single menu item."""
-    item = get_object_or_404(MenuItem.objects.prefetch_related('images'), pk=pk)
+    """Display details, ingredients, and comments for a single menu item."""
+    item = get_object_or_404(MenuItem.objects.prefetch_related('images', 'ingredients', 'comments'), pk=pk)
     primary_image = item.images.filter(is_primary=True).first()
     other_images = item.images.filter(is_primary=False)
+    ingredients = item.ingredients.all()
+    comments = item.comments.select_related('customer').order_by('-created_at')
+
+    user_comment = None
+    if request.user.is_authenticated:
+        user_comment = comments.filter(customer=request.user).first()
+
+    if request.method == 'POST' and request.user.is_authenticated:
+        text = request.POST.get('text', '').strip()
+        if text:
+            Comment.objects.update_or_create(
+                customer=request.user,
+                menu_item=item,
+                defaults={'text': text}
+            )
+            messages.success(request, 'Your comment has been saved.')
+            return redirect('menu:menu_item_detail', pk=pk)
+
     return render(request, 'menu/menu_item_detail.html', {
         'item': item,
         'primary_image': primary_image,
         'other_images': other_images,
+        'ingredients': ingredients,
+        'comments': comments,
+        'user_comment': user_comment,
     })
 
 
