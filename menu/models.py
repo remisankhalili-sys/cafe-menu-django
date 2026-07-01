@@ -146,3 +146,27 @@ class OrderItem(models.Model):
 
     def get_total_price(self):
         return self.price * self.quantity
+    
+class Comment(models.Model):
+    """
+    Represents a customer comment on a menu item.
+    Each customer can leave one comment per menu item.
+    """
+    customer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    menu_item = models.ForeignKey(
+        MenuItem,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('customer', 'menu_item')
+
+    def __str__(self):
+        return f"{self.customer.username} on {self.menu_item.name}"
