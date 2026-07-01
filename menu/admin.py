@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, MenuItem, ProductImage, Order, OrderItem, Comment, Ingredient
+from .models import Category, MenuItem, ProductImage, Order, OrderItem, Comment, Ingredient, Notification
 
 
 class ManagerPermissionMixin:
@@ -121,3 +121,16 @@ class CommentAdmin(ManagerPermissionMixin, admin.ModelAdmin):
     list_filter = ['menu_item', 'created_at']
     search_fields = ['customer__username', 'text']
     readonly_fields = ['customer', 'menu_item', 'created_at']
+
+@admin.register(Notification)
+class NotificationAdmin(ManagerPermissionMixin, admin.ModelAdmin):
+    """Admin panel for order notifications."""
+    list_display = ['message', 'is_read', 'created_at']
+    list_filter = ['is_read', 'created_at']
+    readonly_fields = ['message', 'created_at']
+    actions = ['mark_as_read']
+
+    def mark_as_read(self, request, queryset):
+        """Mark selected notifications as read."""
+        queryset.update(is_read=True)
+    mark_as_read.short_description = 'Mark selected as read'
