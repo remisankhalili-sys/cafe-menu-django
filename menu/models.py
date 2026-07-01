@@ -170,3 +170,19 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.customer.username} on {self.menu_item.name}"
+    
+class Ingredient(models.Model):
+    """
+    Represents a single ingredient or detail of a menu item.
+    Displayed as a table in the product detail page.
+    """
+    menu_item = models.ForeignKey(
+        MenuItem,
+        on_delete=models.CASCADE,
+        related_name='ingredients'
+    )
+    name = models.CharField(max_length=100)
+    value = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.name}: {self.value} ({self.menu_item.name})"
