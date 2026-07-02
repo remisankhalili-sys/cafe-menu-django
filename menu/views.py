@@ -104,9 +104,13 @@ def cart_update(request, pk):
 @login_required
 def wishlist(request):
     """Display the customer's wishlist."""
-    items = Wishlist.objects.filter(customer=request.user).select_related('menu_item')
-    return render(request, 'menu/wishlist.html', {'items': items})
-
+    wishlist_items = Wishlist.objects.filter(customer=request.user).select_related('menu_item')
+    for entry in wishlist_items:
+        entry.menu_item.primary_image = (
+            entry.menu_item.images.filter(is_primary=True).first()
+            or entry.menu_item.images.first()
+        )
+    return render(request, 'menu/wishlist.html', {'items': wishlist_items})
 
 @login_required
 def wishlist_toggle(request, pk):

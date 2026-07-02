@@ -8,13 +8,9 @@ cat > menu/templates/menu/wishlist.html << 'EOF'
         {% for entry in items %}
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
-                    {% with entry.menu_item.images.all as imgs %}
-                        {% for img in imgs %}
-                            {% if img.is_primary %}
-                                <img src="{{ img.image.url }}" class="card-img-top" alt="{{ entry.menu_item.name }}">
-                            {% endif %}
-                        {% endfor %}
-                    {% endwith %}
+                    {% if entry.menu_item.primary_image %}
+                        <img src="{{ entry.menu_item.primary_image.image.url }}" class="card-img-top" alt="{{ entry.menu_item.name }}">
+                    {% endif %}
                     <div class="card-body">
                         <span class="badge bg-secondary mb-2">{{ entry.menu_item.category.name }}</span>
                         <h5 class="card-title">{{ entry.menu_item.name }}</h5>
