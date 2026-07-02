@@ -1,3 +1,4 @@
+cat > menu/templates/menu/wishlist.html << 'EOF'
 {% extends 'menu/base.html' %}
 {% block title %}My Wishlist{% endblock %}
 {% block content %}
@@ -7,10 +8,12 @@
         {% for entry in items %}
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
-                    {% with entry.menu_item.images.all|first as img %}
-                        {% if img %}
-                            <img src="{{ img.image.url }}" class="card-img-top" alt="{{ entry.menu_item.name }}">
-                        {% endif %}
+                    {% with entry.menu_item.images.all as imgs %}
+                        {% for img in imgs %}
+                            {% if img.is_primary %}
+                                <img src="{{ img.image.url }}" class="card-img-top" alt="{{ entry.menu_item.name }}">
+                            {% endif %}
+                        {% endfor %}
                     {% endwith %}
                     <div class="card-body">
                         <span class="badge bg-secondary mb-2">{{ entry.menu_item.category.name }}</span>
@@ -28,3 +31,4 @@
     <a href="{% url 'menu:menu_home' %}" class="btn btn-dark">Browse Menu</a>
 {% endif %}
 {% endblock %}
+EOF
